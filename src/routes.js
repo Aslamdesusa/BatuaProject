@@ -7,7 +7,6 @@ var Joi = require('joi');
 
 
 
-
 const routes = [
 	{
 		method: 'GET',
@@ -26,6 +25,26 @@ const routes = [
 			  // console.log(snapshot.val());
 			}, function (errorObject) {
 			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/IssuerList/{issuer?}',
+		handler: function( request, reply ){
+			// console.log(firebase-admin)
+
+			var issuer = request.params.issuer;
+
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}`)
+			// var IssuerListRef = ref.child('airtel_02');
+			ref.orderByChild('issuername').on("value", function(snapshot) {
+			reply({
+				statusCode: 200,
+				message: 'you have successfully get data',			
+				data: snapshot
+			});
+			  // console.log(snapshot.val());
 			});
 		}
 	},
@@ -94,12 +113,31 @@ const routes = [
 	},
 
 	{
-		method: 'DELETE',
-		path: '/get/data/by/issuername',
+		method: 'POST',
+		path: '/post/user/details',
 		handler: function(request, reply){
-			console.log('skjdf');
-			var deleteDoc = db.collection('IssuerList').doc('airtel_01').delete();
-			reply('yehh got it');
+			// console.log(request.payload);
+			var ref = firebase.database().ref('Users');
+			var newUser = ({
+				"age": request.payload.age,
+				"gender": request.payload.gender,
+				"name": request.payload.name,
+				"password": request.payload.password,
+				"username": request.payload.username
+			});				
+			ref.push(newUser)
+			if (newUser.length === 0) {
+				reply({
+					statusCode: 401,
+					message: "Operation not successfully Completed"
+				});
+			}else{
+				reply({
+					statusCode: 200,
+					message: "Operation successfully Completed",
+					data: newUser
+				});
+			}
 		}
 		
 	}

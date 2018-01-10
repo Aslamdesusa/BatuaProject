@@ -75,17 +75,14 @@ firebase.initializeApp({
 // console.log(firebase);
 // console.log(firebaseio);
 
-// var ref = firebase.database().ref('batua-65719');
-// var IssuerListRef = ref.child('airtel_02');
-// IssuerListRef.update({
-// 	issuerid: 'airtel_04',
-// 	issuername: 'Idea',
-// 	issuertype: 'Payment Bank',
-// 	issuerwebsite: 'www.airtel.in/bank',
-// 	paymentnetworksupported: 'Visa,Mastercard',
-// 	paymentoptionids: 'airtel_01_pay_01,airtel_01_pay_02',
-// 	paymentoptiontypessupported: 'Creditcard'
-
+// var ref = firebase.database().ref('Users');
+// // var IssuerListRef = ref.child('airtel_02');
+// ref.push({
+// 	age: age,
+// 	gender: gender,
+// 	name: gender,
+// 	password:,
+// 	username: 'amol'
 // });
 
 
