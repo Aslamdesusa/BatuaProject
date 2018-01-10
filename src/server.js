@@ -40,6 +40,10 @@ firebase.initializeApp({
 
 
 
+
+
+
+
 // var ref = firebase.database("server/saving-data/fireblog");
 // var UsersRef = ref.child("Users");
 // UsersRef.set({
@@ -53,8 +57,11 @@ firebase.initializeApp({
 //   }
 // });
 
-// var usersRef = ref.child("airtel_02");
-// var batua-65719Ref = usersRef.child("-L2--B_iFkNoTIiIk67A");
+// var ref = firebase.database("Users").doc('-L2Q4fKeYGzyYRmUZXei').delete();
+var deleteDoc = db.collection('Users').doc('-L2Q4fKeYGzyYRmUZXei').delete();
+
+// var usersRef = ref.child("-L2Q4fKeYGzyYRmUZXei");
+// // var batua-65719Ref = usersRef.child("-L2--B_iFkNoTIiIk67A");
 // batua-65719Ref.update({
 //   "issuerid": "Amazing Grace"
 // });
