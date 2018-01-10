@@ -10,11 +10,13 @@ var Joi = require('joi');
 const routes = [
 	{
 		method: 'GET',
-		path: '/get/all/IssuerList',
+		path: '/get/IssuerList/{issuer?}',
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
-			
-			var ref = firebase.database().ref('IssuerList')
+
+			var issuer = request.params.issuer;
+
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}`)
 			// var IssuerListRef = ref.child('airtel_02');
 			ref.orderByChild('issuername').on("value", function(snapshot) {
 			reply({
