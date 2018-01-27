@@ -1,6 +1,7 @@
 import Hapi from 'hapi';
 import firebase from 'firebase';
 // const Hapi = require('hapi');
+var db = require('firebase')
 import routes from './routes'
 
 // var admin = require("firebase-admin");
@@ -13,7 +14,7 @@ import routes from './routes'
 const server = new Hapi.Server();
 server.connection({
   host: '0.0.0.0',
-  port: process.env.PORT || 8080
+  port: process.env.PORT || 8000
 });
 // var admin = require("firebase-admin");
 
@@ -58,7 +59,23 @@ firebase.initializeApp({
 // });
 
 // var ref = firebase.database("Users").doc('-L2Q4fKeYGzyYRmUZXei').delete();
-var deleteDoc = db.collection('Users').doc('-L2Q4fKeYGzyYRmUZXei').delete();
+// var ref = firebase.database('Users').doc('-L2Q4fKeYGzyYRmUZXei').delete();
+// doc kk ander jo value hia wo kon si value hoti hia datatbase mei
+// console.log(deleteDoc)
+
+
+// router.get('/Users', function(req, res, next) {
+//   var key = req.query.item;
+//   let del_ref = admin.database().ref("Users/" + key);
+//   del_ref.remove()
+//     .then(function() {
+//       res.send({ status: 'ok' });
+//     })
+//     .catch(function(error) {
+//       console.log('Error deleting data:', error);
+//       res.send({ status: 'error', error: error });
+//     });
+// });
 
 // var usersRef = ref.child("-L2Q4fKeYGzyYRmUZXei");
 // // var batua-65719Ref = usersRef.child("-L2--B_iFkNoTIiIk67A");
