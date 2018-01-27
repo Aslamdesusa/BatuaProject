@@ -2,7 +2,7 @@ var admin = require("firebase-admin");
 var firebase = require("firebase")
 var request1 = require('request');
 // var IssuerList = require("")
-var db = require('firebase')
+// var db = require('firebase')
 var widgets = require("widgets")
 var Joi = require('joi');
 
