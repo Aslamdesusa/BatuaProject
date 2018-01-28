@@ -1,17 +1,49 @@
 var admin = require("firebase-admin");
 var firebase = require("firebase")
 var request1 = require('request');
+var config = require('config')
 // var IssuerList = require("")
 var db = require('firebase')
 var widgets = require("widgets")
 var Joi = require('joi');
+// var config = require('nodejs-config')(
+//    __dirname  // an absolute path to your applications `config` directory 
+// );
+
+// getting authentiction with signInWithEmailAndPassword when user sign in the app @
+
+// var firebaseClient = require('firebase');
+// firebaseClient.initializeApp(config)
+// firebaseClient.auth().signInWithEmailAndPassword(req.body.email, req.body.password).catch(function(error){
+//     console.log(error);
+// })
 
 
 
 const routes = [
+	{	
+		method: 'GET',
+		path: '/check',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting auth of a particular user",
+            notes:"In this route we are Getting auth of particular user"
+		},
+		handler: function(request, reply){
+			var user = firebaseClient.auth().currentUser
+			console.log(user)
+		}
+	},
 	{
 		method: 'GET',
 		path: '/get/IssuerList/{issuer?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of a particular Issuer",
+            notes:"In this route we are Getting details of particular issuer where you have to make a request in params by issuerName"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 
@@ -34,13 +66,19 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/all/IssuerList',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all IssuerList",
+            notes:"In this route we are Getting all details of IssuerList"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 			
 			var ref = firebase.database().ref('IssuerList')
 			// var IssuerListRef = ref.child('airtel_02');
 			// ref.orderByChild('categorynames').on("value", function(snapshot) {
-			ref.orderByChild('IssuerList').limitToLast().on("child_added", function(snapshot) {
+			ref.orderByChild('IssuerList').on("value", function(snapshot) {
 				
 					reply({
 						statusCode: 200,
@@ -56,6 +94,12 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/all/MerchantList',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all MerchantList",
+            notes:"In this route we are Getting all details of MerchantList"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 			
@@ -77,6 +121,12 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/all/OfferList',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all OfferList",
+            notes:"In this route we are Getting all details of OfferList"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 			
@@ -98,6 +148,12 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/all/PaymentOptionList',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all PaymentOptionList",
+            notes:"In this route we are Getting all details of paymentOption"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 			
@@ -119,6 +175,12 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/PaymentOptionList/{paymentOption?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of particular paymentOption",
+            notes:"In this route we are Getting particular paymentOption by paymentOption name"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 
@@ -141,6 +203,12 @@ const routes = [
 	{
 		method: 'POST',
 		path: '/post/user/details',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Post user details",
+            notes:"In this route we can post details of new user"
+		},
 		handler: function(request, reply){
 			// console.log(request.payload);
 			var ref = firebase.database().ref('Users');
@@ -170,6 +238,12 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/get/Users/{id?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of particular user",
+            notes:"In this route we are Getting details of particular user"
+		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
 
@@ -192,6 +266,12 @@ const routes = [
 	{
 		method: 'PUT',
 		path: '/update/user/details/{id?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"updating user data",
+            notes:"In this route user can update his details"
+		},
 		handler: function(request, reply){
 			// console.log(request.payload);
 			var id = request.params.id;
@@ -222,6 +302,12 @@ const routes = [
 	{
 		method: 'DELETE',
 		path: '/delete/Users/{id?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"delete user data",
+            notes:"In this route User can DELETE his profile with details"
+		},
 		handler: function(request, reply){
 			// console.log("dsfkjlaskj")
 			var id = request.params.id;
@@ -241,6 +327,12 @@ const routes = [
 	{
         method: 'GET',
         path: '/scrapewebdata',
+        config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting data with other websites",
+            notes:"In this route we are crowling data in other websites"
+		},
         handler: function(request1, reply) {
             
             console.log('fulldetails')
@@ -269,6 +361,19 @@ const routes = [
             });
         }
     },
+  //   {
+  //   	method: 'GET',
+  //   	path: '/get/paymentOption/PaymentsIds',
+  //   	config: {
+		// 	// include this route in swagger documentation
+		// 	tags:['api'],
+  //           description:"Getting data with other websites",
+  //           notes:"In this route we are crowling data in other websites"
+		// },
+		// handler: function(request, reply){
+
+		// }
+  //   }
 
 ]
 export default routes;
