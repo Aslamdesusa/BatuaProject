@@ -24,6 +24,7 @@
     "joi": "^11.4.0",
     "nodejs-config": "^1.0.1",
     "nodemon": "^1.12.1",
+    "ref": "^1.3.5",
     "request": "^2.83.0",
     "vision": "^4.1.1",
     "widgets": "^0.3.4"

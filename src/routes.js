@@ -2,6 +2,7 @@ var admin = require("firebase-admin");
 var firebase = require("firebase")
 var request1 = require('request');
 var config = require('config')
+var ref1 = require('ref')
 // var IssuerList = require("")
 // var db = require('firebase')
 var widgets = require("widgets")
@@ -43,6 +44,11 @@ const routes = [
 			tags:['api'],
             description:"Getting details of a particular Issuer",
             notes:"In this route we are Getting details of particular issuer where you have to make a request in params by issuerName"
+            // validate: {
+            // 	params:{
+
+            // 	}
+            // }
 		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
@@ -361,19 +367,55 @@ const routes = [
             });
         }
     },
-  //   {
-  //   	method: 'GET',
-  //   	path: '/get/paymentOption/PaymentsIds',
-  //   	config: {
-		// 	// include this route in swagger documentation
-		// 	tags:['api'],
-  //           description:"Getting data with other websites",
-  //           notes:"In this route we are crowling data in other websites"
-		// },
-		// handler: function(request, reply){
+    {
+		method: 'GET',
+		path: '/get/paymentOption/list/{issuer?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of paymentOption",
+            notes:"In this route we are Getting details of paymentoptionids"
+		},
+		handler: function( request, reply ){
 
-		// }
-  //   }
+			var issuer = request.params.issuer;
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}/paymentoptionids`)
+
+			ref.orderByChild('issuerid').on("value", function(snapshot1) {
+				if (snapshot1 == 0) {
+					reply({
+						message: "there is no any paymentoptionids"
+					});
+				}
+			var payment = snapshot1.val();
+			var arr = payment.split(",").map(function (val) {
+			  return String(val);
+			});
+		    var pau = []
+
+		    pau.push(arr)
+
+		    console.log(pau);
+		    for (var each in pau){
+		    	for (var each1 in each){
+			var ref1 = firebase.database().ref(`/PaymentOptionList/${pau[each1]}`)
+
+			console.log(ref1)
+
+			ref1.orderByChild('issuername').on("value", function(snapshot){
+				reply({
+					snapshot: snapshot
+				});
+			});
+			};
+			};
+			console.log("hello");
+
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
 
 ]
 export default routes;
