@@ -238,7 +238,7 @@ const routes = [
 					data: newUser
 				});
 			}
-		}
+		} 
 		
 	},
 	{
@@ -388,19 +388,19 @@ const routes = [
 					});
 				}
 			var payment = snapshot1.val();
-			var ref1 = firebase.database().ref(`/PaymentOptionList/${payment}`)
+			var ans = []
+			for(var i=0; i < payment.length; i++){
+				var ref1 = firebase.database().ref(`/PaymentOptionList/${payment[i]}`)
 
-			ref1.orderByChild('issuername').on("value", function(snapshot){
-				var listOfDetails = []
-				console.log(listOfDetails)
-				for (var i = 0; i<snapshot.length; i++){
-					listOfDetails.push(snapshot[i])
-				}
-				reply({
-					snapshot: listOfDetails
+				ref1.orderByChild('issuername').on("value", function(snapshot){
+					ans.push(snapshot)
 				});
-			});
-			
+				if ( i === payment.length -1){
+					reply(ans)
+				} 
+			}
+
+			console.log(ans)
 			console.log("hello");
 
 			}, function (errorObject) {
