@@ -367,7 +367,7 @@ const routes = [
             });
         }
     },
-    {
+     {
 		method: 'GET',
 		path: '/get/paymentOption/list/{issuer?}',
 		config: {
@@ -388,27 +388,19 @@ const routes = [
 					});
 				}
 			var payment = snapshot1.val();
-			var arr = payment.split(",").map(function (val) {
-			  return String(val);
-			});
-		    var pau = []
-
-		    pau.push(arr)
-
-		    console.log(pau);
-		    for (var each in pau){
-		    	for (var each1 in each){
-			var ref1 = firebase.database().ref(`/PaymentOptionList/${pau[each1]}`)
-
-			console.log(ref1)
+			var ref1 = firebase.database().ref(`/PaymentOptionList/${payment}`)
 
 			ref1.orderByChild('issuername').on("value", function(snapshot){
+				var listOfDetails = []
+				console.log(listOfDetails)
+				for (var i = 0; i<snapshot.length; i++){
+					listOfDetails.push(snapshot[i])
+				}
 				reply({
-					snapshot: snapshot
+					snapshot: listOfDetails
 				});
 			});
-			};
-			};
+			
 			console.log("hello");
 
 			}, function (errorObject) {
