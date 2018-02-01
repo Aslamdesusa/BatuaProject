@@ -382,9 +382,9 @@ const routes = [
  			var ref = firebase.database().ref(`/IssuerList/${issuer}/paymentoptionids`)
 
 			ref.orderByChild('issuerid').on("value", function(snapshot1) {
-				if (snapshot1 == 0) {
+				if (snapshot1.val() == 0) {
 					reply({
-						message: "there is no any paymentoptionids"
+						message: "There is no any payment option"
 					});
 				}
 			var payment = snapshot1.val();
@@ -400,8 +400,8 @@ const routes = [
 				} 
 			}
 
-			console.log(ans)
-			console.log("hello");
+			// console.log(ans)
+			// console.log("hello");
 
 			}, function (errorObject) {
 			  console.log("The read failed: " + errorObject.code);
