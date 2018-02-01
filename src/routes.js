@@ -383,9 +383,7 @@ const routes = [
 
 			ref.orderByChild('issuerid').on("value", function(snapshot1) {
 				if (snapshot1.val() == 0) {
-					reply({
-						message: "There is no any payment option"
-					});
+					reply(snapshot1)
 				}
 			var payment = snapshot1.val();
 			var ans = []
