@@ -3,22 +3,8 @@ var firebase = require("firebase")
 var request1 = require('request');
 var config = require('config')
 var ref1 = require('ref')
-// var IssuerList = require("")
-// var db = require('firebase')
 var widgets = require("widgets")
 var Joi = require('joi');
-// var config = require('nodejs-config')(
-//    __dirname  // an absolute path to your applications `config` directory 
-// );
-
-// getting authentiction with signInWithEmailAndPassword when user sign in the app @
-
-// var firebaseClient = require('firebase');
-// firebaseClient.initializeApp(config)
-// firebaseClient.auth().signInWithEmailAndPassword(req.body.email, req.body.password).catch(function(error){
-//     console.log(error);
-// })
-
 
 
 const routes = [
@@ -43,12 +29,12 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"Getting details of a particular Issuer",
-            notes:"In this route we are Getting details of particular issuer where you have to make a request in params by issuerName"
-            // validate: {
-            // 	params:{
-
-            // 	}
-            // }
+            notes:"In this route we are Getting details of particular issuer where you have to make a request in params by issuerName",
+            validate: {
+            	params: {
+            		issuer: Joi.string()
+            	}
+            }
 		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
@@ -185,7 +171,12 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"Getting details of particular paymentOption",
-            notes:"In this route we are Getting particular paymentOption by paymentOption name"
+            notes:"In this route we are Getting particular paymentOption by paymentOption name",
+            validate: {
+            	params: {
+            		paymentOption: Joi.string()
+            	}
+            }
 		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
@@ -213,7 +204,16 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"Post user details",
-            notes:"In this route we can post details of new user"
+            notes:"In this route we can post details of new user",
+            validate: {
+            	payload: {
+            		age : Joi.string().required(),
+            		gender : Joi.string().required(),
+            		name : Joi.string().required(),
+            		password : Joi.string().required(),
+            		username : Joi.string().required()
+            	}
+            }
 		},
 		handler: function(request, reply){
 			// console.log(request.payload);
@@ -248,7 +248,12 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"Getting details of particular user",
-            notes:"In this route we are Getting details of particular user"
+            notes:"In this route we are Getting details of particular user",
+            validate: {
+            	params: {
+            		id: Joi.string()
+            	}
+            }
 		},
 		handler: function( request, reply ){
 			// console.log(firebase-admin)
@@ -276,7 +281,19 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"updating user data",
-            notes:"In this route user can update his details"
+            notes:"In this route user can update his details",
+            validate: {
+            	params: {
+            		id: Joi.string()
+            	},
+            	payload: {
+            		age : Joi.string().required(),
+            		gender : Joi.string().required(),
+            		name : Joi.string().required(),
+            		password : Joi.string().required(),
+            		username : Joi.string().required()
+            	}
+            }
 		},
 		handler: function(request, reply){
 			// console.log(request.payload);
@@ -312,7 +329,12 @@ const routes = [
 			// include this route in swagger documentation
 			tags:['api'],
             description:"delete user data",
-            notes:"In this route User can DELETE his profile with details"
+            notes:"In this route User can DELETE his profile with details",
+            validate: {
+            	params: {
+            		id: Joi.string()
+            	}
+            }
 		},
 		handler: function(request, reply){
 			// console.log("dsfkjlaskj")
@@ -367,14 +389,19 @@ const routes = [
             });
         }
     },
-     {
+    {
 		method: 'GET',
 		path: '/get/paymentOption/list/{issuer?}',
 		config: {
 			// include this route in swagger documentation
 			tags:['api'],
             description:"Getting details of paymentOption",
-            notes:"In this route we are Getting details of paymentoptionids"
+            notes:"In this route we are Getting details of paymentoptionids",
+            validate: {
+            	params:{
+            		issuer: Joi.string()
+            	}
+            }
 		},
 		handler: function( request, reply ){
 
@@ -392,20 +419,126 @@ const routes = [
 
 				ref1.orderByChild('issuername').on("value", function(snapshot){
 					ans.push(snapshot)
-				});
-				if ( i === payment.length -1){
+				})
+				if (i === payment.length -1) {
 					reply(ans)
-				} 
-			}
+				}	 
+				}
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/OfferList/{paymentOption?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of OfferList",
+            notes:"In this route we are Getting details of al OfferList by paymentOptionids",
+            validate: {
+            	params: {
+            		paymentOption: Joi.string()
+            	}
+            }
+		},
+		handler: function( request, reply ){
 
-			// console.log(ans)
-			// console.log("hello");
+			var paymentOption = request.params.paymentOption;
+ 			var ref = firebase.database().ref(`/PaymentOptionList/${paymentOption}/offerids`)
 
+			ref.orderByChild('issuerid').on("value", function(snapshot1) {
+				if (snapshot1.val() == 0) {
+					reply(snapshot1)
+				}
+			var offers = snapshot1.val();
+			var ans = []
+			for(var i=0; i < offers.length; i++){
+				var ref1 = firebase.database().ref(`/OfferList/${offers[i]}`)
+
+				ref1.orderByChild('issuername').on("value", function(snapshot){
+					ans.push(snapshot)
+				})
+				if (i === offers.length -1) {
+					reply(ans)
+				}	 
+				}
 			}, function (errorObject) {
 			  console.log("The read failed: " + errorObject.code);
 			});
 		}
 	},
 
+
+// ======================================================================================================
+	// you will get issuerlist by methods (Credit_Card, Debit_Card, Wallet)
+	{
+		method: 'GET',
+		path: '/get/all/issuerlist/by/payment/method/Credit_Card',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all IssuerList where method is Credit_Card",
+            notes:"In this route we are Getting all details of IssuerList where method is Credit_Card"
+		},
+		handler: function(request, reply){
+ 			var ref = firebase.database().ref('IssuerList')
+			ref.orderByChild("Credit_Card").equalTo("Yes").on("value", function(snapshot){
+				// console.log(snapshot.val());
+				reply({
+					statusCode: 200,
+					message: "all Credit_Card issuers successfully get",
+				 	snapshot: snapshot.val()
+				});
+			}, function(errorObject){
+				console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/all/issuerlist/by/payment/method/Debit_Card',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all IssuerList where method is Debit_Card",
+            notes:"In this route we are Getting all details of IssuerList where method is Debit_Card"
+		},
+		handler: function(request, reply){
+ 			var ref = firebase.database().ref('IssuerList')
+			ref.orderByChild("Debit_Card").equalTo("Yes").on("value", function(snapshot){
+				reply({
+					statusCode: 200,
+					message: "all Debit_Card issuers successfully get",
+				 	snapshot: snapshot.val()
+				});
+			}, function(errorObject){
+				console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/all/issuerlist/by/payment/method/Wallet',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting all IssuerList where method is Wallet",
+            notes:"In this route we are Getting all details of IssuerList where method is Wallet"
+		},
+		handler: function(request, reply){
+ 			var ref = firebase.database().ref('IssuerList')
+			ref.orderByChild("Wallet").equalTo("Yes").on("value", function(snapshot){
+				reply({
+					statusCode: 200,
+					message: "all Wallet issuers successfully get",
+				 	snapshot: snapshot.val()
+				});
+			}, function(errorObject){
+				console.log("The read failed: " + errorObject.code);
+			});
+		}
+	}
 ]
 export default routes;
