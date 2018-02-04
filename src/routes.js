@@ -389,46 +389,6 @@ const routes = [
             });
         }
     },
-    {
-		method: 'GET',
-		path: '/get/paymentOption/list/{issuer?}',
-		config: {
-			// include this route in swagger documentation
-			tags:['api'],
-            description:"Getting details of paymentOption",
-            notes:"In this route we are Getting details of paymentoptionids",
-            validate: {
-            	params:{
-            		issuer: Joi.string()
-            	}
-            }
-		},
-		handler: function( request, reply ){
-
-			var issuer = request.params.issuer;
- 			var ref = firebase.database().ref(`/IssuerList/${issuer}/paymentoptionids`)
-
-			ref.orderByChild('issuerid').on("value", function(snapshot1) {
-				if (snapshot1.val() == 0) {
-					reply(snapshot1)
-				}
-			var payment = snapshot1.val();
-			var ans = []
-			for(var i=0; i < payment.length; i++){
-				var ref1 = firebase.database().ref(`/PaymentOptionList/${payment[i]}`)
-
-				ref1.orderByChild('issuername').on("value", function(snapshot){
-					ans.push(snapshot)
-				})
-				if (i === payment.length -1) {
-					reply(ans)
-				}	 
-				}
-			}, function (errorObject) {
-			  console.log("The read failed: " + errorObject.code);
-			});
-		}
-	},
 	{
 		method: 'GET',
 		path: '/get/OfferList/{paymentOption?}',
@@ -484,8 +444,7 @@ const routes = [
 		},
 		handler: function(request, reply){
  			var ref = firebase.database().ref('IssuerList')
-			ref.orderByChild("Credit_Card").equalTo("Yes").on("value", function(snapshot){
-				// console.log(snapshot.val());
+			ref.orderByChild('credit_card').equalTo("Yes").once("value", function(snapshot){
 				reply({
 					statusCode: 200,
 					message: "all Credit_Card issuers successfully get",
@@ -507,7 +466,7 @@ const routes = [
 		},
 		handler: function(request, reply){
  			var ref = firebase.database().ref('IssuerList')
-			ref.orderByChild("Debit_Card").equalTo("Yes").on("value", function(snapshot){
+			ref.orderByChild("debit_card").equalTo("Yes").on("value", function(snapshot){
 				reply({
 					statusCode: 200,
 					message: "all Debit_Card issuers successfully get",
@@ -529,7 +488,7 @@ const routes = [
 		},
 		handler: function(request, reply){
  			var ref = firebase.database().ref('IssuerList')
-			ref.orderByChild("Wallet").equalTo("Yes").on("value", function(snapshot){
+			ref.orderByChild("wallet").equalTo("Yes").on("value", function(snapshot){
 				reply({
 					statusCode: 200,
 					message: "all Wallet issuers successfully get",
@@ -539,6 +498,131 @@ const routes = [
 				console.log("The read failed: " + errorObject.code);
 			});
 		}
-	}
+	},
+
+
+// =====================================================================================================
+	{
+		method: 'GET',
+		path: '/get/paymentOption/issuerlist/credit_card/{issuer?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of paymentOption",
+            notes:"In this route we are Getting details of Credit_Cardids by issuername",
+            validate: {
+            	params:{
+            		issuer: Joi.string()
+            	}
+            }
+		},
+		handler: function( request, reply ){
+
+			var issuer = request.params.issuer;
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}/credit_card_mehtods`)
+
+			ref.orderByChild('issuerid').on("value", function(snapshot1) {
+				console.log(snapshot1.val())
+				if (snapshot1.val() == 0) {
+					reply(snapshot1.val())
+				}
+			var payment = snapshot1.val();
+			var ans = []
+			for(var i=0; i<payment.length; i++){
+				var ref1 = firebase.database().ref(`/PaymentOptionList/${payment[i]}`)
+
+				ref1.orderByChild('issuername').on("value", function(snapshot){
+					ans.push(snapshot)
+				})
+				if (i === payment.length -1) {
+					reply(ans)
+				}	 
+				}
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/paymentOption/issuerlist/debit_card/{issuer?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of paymentOption",
+            notes:"In this route we are Getting details of paymentoption by Debit_Cardids by issuername",
+            validate: {
+            	params:{
+            		issuer: Joi.string()
+            	}
+            }
+		},
+		handler: function( request, reply ){
+
+			var issuer = request.params.issuer;
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}/debit_card_methods`)
+
+			ref.orderByChild('issuerid').on("value", function(snapshot1) {
+				console.log(snapshot1.val())
+				if (snapshot1.val() == 0) {
+					reply(snapshot1.val())
+				}
+			var payment = snapshot1.val();
+			var ans = []
+			for(var i=0; i<payment.length; i++){
+				var ref1 = firebase.database().ref(`/PaymentOptionList/${payment[i]}`)
+
+				ref1.orderByChild('issuername').on("value", function(snapshot){
+					ans.push(snapshot)
+				})
+				if (i === payment.length -1) {
+					reply(ans)
+				}	 
+				}
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/paymentOption/issuerlist/wallet/{issuer?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of paymentOption",
+            notes:"In this route we are Getting details of paymentoption by walletids by issuername",
+            validate: {
+            	params:{
+            		issuer: Joi.string()
+            	}
+            }
+		},
+		handler: function( request, reply ){
+			var issuer = request.params.issuer;
+ 			var ref = firebase.database().ref(`/IssuerList/${issuer}/wallet_methods`)
+
+			ref.orderByChild('issuerid').on("value", function(snapshot1) {
+				console.log(snapshot1.val())
+				if (snapshot1.val() == 0) {
+					reply(snapshot1.val())
+				}
+			var payment = snapshot1.val();
+			var ans = []
+			for(var i=0; i<payment.length; i++){
+				var ref1 = firebase.database().ref(`/PaymentOptionList/${payment[i]}`)
+
+				ref1.orderByChild('issuername').on("value", function(snapshot){
+					ans.push(snapshot)
+				})
+				if (i === payment.length -1) {
+					reply(ans)
+				}	 
+				}
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
 ]
 export default routes;
