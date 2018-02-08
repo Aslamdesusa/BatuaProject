@@ -207,11 +207,14 @@ const routes = [
             notes:"In this route we can post details of new user",
             validate: {
             	payload: {
-            		age : Joi.string().required(),
+            		firstname : Joi.string().required(),
+            		lastname : Joi.string().required(),
+            		email : Joi.string().required(),
+            		city : Joi.string().required(),
+            		birthday : Joi.string().required(),
             		gender : Joi.string().required(),
-            		name : Joi.string().required(),
-            		password : Joi.string().required(),
-            		username : Joi.string().required()
+            		phone : Joi.string().required(),
+            		maritalstatus : Joi.string().required()
             	}
             }
 		},
@@ -219,11 +222,14 @@ const routes = [
 			// console.log(request.payload);
 			var ref = firebase.database().ref('Users');
 			var newUser = ({
-				"age": request.payload.age,
+				"firstname": request.payload.firstname,
+				"lastname": request.payload.lastname,
+				"email": request.payload.email,
+				"city": request.payload.city,
+				"birthday": request.payload.birthday,
 				"gender": request.payload.gender,
-				"name": request.payload.name,
-				"password": request.payload.password,
-				"username": request.payload.username
+				"phone": request.payload.phone,
+				"maritalstatus": request.payload.maritalstatus
 			});				
 			ref.push(newUser)
 			if (newUser.length === 0) {
@@ -624,5 +630,43 @@ const routes = [
 			});
 		}
 	},
+	{
+		method: 'POST',
+		path: '/post/user/selected/methods/{user?}',
+		config:{
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"posting paymentoption by user",
+            notes:"In this route we are posting paymentoption which is selected by user",
+			validate:{
+				params:{
+					user: Joi.string()
+				},
+				payload:{
+					payselected : Joi.string().required(),
+				}
+			}
+		},
+		handler: function(request, reply){
+			var user = request.params.user;
+			var ref = firebase.database().ref(`/Users/${user}`);
+			var payMethod = ({
+				"payselected": request.payload.payselected,
+			});
+			ref.push(payMethod)
+			if (payMethod.length === 0) {
+				reply({
+					statusCode: 401,
+					message: "user not selected any option"
+				});
+			}else{
+				reply({
+					statusCode: 200,
+					message: "user selected method add successfully",
+					data: payMethod
+				});
+			}
+		}
+	}
 ]
 export default routes;
