@@ -57,6 +57,39 @@ const routes = [
 	},
 	{
 		method: 'GET',
+		path: '/get/benefit/{benefitid?}',
+		config: {
+			// include this route in swagger documentation
+			tags:['api'],
+            description:"Getting details of a particular Issuer",
+            notes:"In this route we are Getting details of particular issuer where you have to make a request in params by issuerName",
+            validate: {
+            	params: {
+            		benefitid: Joi.string()
+            	}
+            }
+		},
+		handler: function( request, reply ){
+			// console.log(firebase-admin)
+
+			var benefitid = request.params.benefitid;
+
+ 			var ref = firebase.database().ref(`/benefits/${benefitid}`)
+			// var IssuerListRef = ref.child('airtel_02');
+			ref.orderByChild('cashwithdrawlfee').on("value", function(snapshot) {
+			reply({
+				statusCode: 200,
+				message: 'benefit data successfully get',			
+				data: snapshot
+			});
+			  // console.log(snapshot.val());
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			});
+		}
+	},
+	{
+		method: 'GET',
 		path: '/get/all/IssuerList',
 		config: {
 			// include this route in swagger documentation
